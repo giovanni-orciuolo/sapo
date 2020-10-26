@@ -1,0 +1,30 @@
+{{- define "element_to_field" -}}
+    {{if ne .Type "" -}}
+        {{.Name}}{{if eq .MinOccurs "0"}}?{{end}}: {{ConvertSoapTypeToTypescript .Type}}{{if eq .MaxOccurs "unbounded"}}[]{{end}};
+    {{- else -}}
+        {{.Name}}{{if eq .MinOccurs "0"}}?{{end}}: {
+            {{template "complex_type_to_attributes" .ComplexType}}
+        }
+    {{- end -}}
+{{- end -}}
+
+{{- define "attribute_to_field" -}}
+    {{.Name}}?: {{ConvertSoapTypeToTypescript .Type}};
+{{- end -}}
+
+{{- define "complex_type_to_attributes" -}}
+{{- with .Sequence -}}
+    {{range .Elements -}}
+        {{- template "element_to_field" .}}
+    {{end -}}
+{{- end -}}
+    {{range .Attributes -}}
+        {{- template "attribute_to_field" .}}
+    {{end -}}
+{{- end -}}
+
+{{define "complex_type_to_interface" -}}
+interface {{.Name}} {
+    {{template "complex_type_to_attributes" .}}
+}
+{{end -}}
