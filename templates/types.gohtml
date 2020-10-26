@@ -28,3 +28,9 @@ interface {{.Name}} {
     {{template "complex_type_to_attributes" .}}
 }
 {{end -}}
+
+{{define "element_to_interface" -}}
+interface {{.Name}} {
+    {{template "complex_type_to_attributes" .ComplexType}}
+}
+{{end -}}

@@ -31,10 +31,17 @@ func main() {
     }
 
     log.Println("Parsed WSDL!")
-    CreateBaseTemplate()
+    CreateTemplates()
 
-    for _, complexType := range definitions.Types.Schemas[0].ComplexTypes {
-        iface := CreateInterfaceFromComplexType(*complexType)
-        log.Println(iface)
+    for _, schema := range definitions.Types.Schemas {
+        for _, complexType := range schema.ComplexTypes {
+            iface := CreateInterfaceFromComplexType(*complexType)
+            log.Println(iface)
+        }
+        for _, element := range schema.Elements {
+            iface := CreateInterfaceFromElement(*element)
+            log.Println(iface)
+        }
     }
+
 }

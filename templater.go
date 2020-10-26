@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	BaseTemplate *template.Template
+	TypesTemplate *template.Template
 )
-func CreateBaseTemplate() {
-    BaseTemplate = template.Must(template.New("base_template").
+func CreateTemplates() {
+    TypesTemplate = template.Must(template.New("base_template").
         Funcs(template.FuncMap{ "ConvertSoapTypeToTypescript": ConvertSoapTypeToTypescript }).
-        ParseFiles("template.gohtml"))
+        ParseFiles("templates/types.gohtml"))
 }
 
 func ConvertSoapTypeToTypescript(soapType string) string {
@@ -44,7 +44,7 @@ func ConvertSoapTypeToTypescript(soapType string) string {
 
 func ExecuteTemplate(name string, data interface{}) string {
     var buffer bytes.Buffer
-    err := BaseTemplate.ExecuteTemplate(&buffer, name, data)
+    err := TypesTemplate.ExecuteTemplate(&buffer, name, data)
     if err != nil {
         log.Panic(err)
     }
@@ -54,4 +54,7 @@ func ExecuteTemplate(name string, data interface{}) string {
 
 func CreateInterfaceFromComplexType(complexType ComplexType) string {
     return ExecuteTemplate("complex_type_to_interface", complexType)
+}
+func CreateInterfaceFromElement(element Element) string {
+    return ExecuteTemplate("element_to_interface", element)
 }
